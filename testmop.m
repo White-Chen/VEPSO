@@ -1539,6 +1539,7 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
+	x 	     =x';
         n            =length(x);
         f1           =x(1);
         t            =(floor(itrCounter/window))/step;
@@ -1549,7 +1550,7 @@ p.func   = @evaluate;
         arbit        =sum(k);
         g            =1+arbit;
         f2           =g*(1-(f1/g)^0.5);
-        y            =[f1;f2];
+        y            =[f1,f2];
         clear temp Gtemp k;
     end
 end 
@@ -1602,7 +1603,8 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
-        n            =length(x);
+        x	     =x';
+	n            =length(x);
         t            =(floor(itrCounter/window))/step;
         G            =abs(sin(0.5*3.14*t));
         F            =2*G;  %10^(2*sin(0.5*pi*t))
@@ -1611,7 +1613,7 @@ p.func   = @evaluate;
         temp         =x(2:n);
         g            =1+G+sum((temp-Gtemp).^2);
         f2           =g*(1-(f1/g)^0.5);
-        y            =[f1;f2];
+        y            =[f1,f2];
         clear Gtemp temp;
     end
 end 
@@ -1630,6 +1632,7 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
+	x	     =x';
         n            =length(x);
         t            =(floor(itrCounter/window))/step;
         temp         =x(p.od:end);
@@ -1642,12 +1645,12 @@ p.func   = @evaluate;
         for k = 2:p.od-1
             fxtemp      =cos((x(1:p.od-k)*pi)/2);
             fx          =(1+g)*prod(fxtemp)*sin((x(p.od-k+1)*pi)/2);
-            f           =[f;fx]
+            f           =[f,fx]
             clear fxtemp fx;
         end
         fxtemp       =sin((x(1)*pi)/2);
         fx           =(1+g)*fxtemp;
-        f            =[f;fx];
+        f            =[f,fx];
         y            =f;
         clear temp gtemp f1temp fxtemp fx f;
     end
@@ -1667,6 +1670,7 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
+	x	     =x';
         n            =length(x);
         t            =(floor(itrCounter/window))/step;
         temp         =x(p.od:end);
@@ -1681,12 +1685,12 @@ p.func   = @evaluate;
         for k = 2:p.od-1
           fxtemp      =cos((y(1:p.od-k)*pi)/2);
           fx          =(1+g)*prod(fxtemp)*sin((y(p.od-k+1)*pi)/2);
-          f           =[f;fx]
+          f           =[f,fx]
           clear fxtemp fx;
         end
         fxtemp       =sin((y(1)*pi)/2);
         fx           =(1+g)*fxtemp;
-        f            =[f;fx];
+        f            =[f,fx];
         y            =f;
         clear temp gtemp f1temp fxtemp fx f;
     end
