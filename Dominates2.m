@@ -1,18 +1,11 @@
-function dom=Dominates2(x,y,numOfObj,nn)
-
-    
-    if nn == 1
-        index = numOfObj;
-    else
-        index = nn - 1;
-    end
+function dom=Dominates2(x,y,numOfObj)
 
     if isstruct(x)
-        x=x.Cost(index);
+        x=x.Cost(numOfObj);
     end
 
     if isstruct(y)
-        y=y.Cost(index);
+        y=y.Cost(numOfObj);
     end
 
     dom=x<y;

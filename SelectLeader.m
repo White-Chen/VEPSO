@@ -21,11 +21,11 @@
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function rep_h=SelectLeader(pops,nn,numOfObj)
-	index = [pops.numOfObj];
+function rep_h=SelectLeader(pops,nn,numOfSwarm)
+	index = [pops.subSwarmIndex];
 	rep_h = pops(ceil(rand*numel(pops)));
     if nn == 1
-    	pops = pops(find(index == numOfObj));
+    	pops = pops(find(index == numOfSwarm));
     else
         pops = pops(find(index == (nn-1)));
     end

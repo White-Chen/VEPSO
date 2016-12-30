@@ -34,5 +34,7 @@ function particle=CreateEmptyParticle(n)
     empty_particle.Best.Position=[];
     empty_particle.Best.Cost=[];
     empty_particle.numOfObj = 0;
+    empty_particle.subSwarmIndex = 0;
+    empty_particle.numlies = 0;
     particle=repmat(empty_particle,n,1); 
 end

@@ -48,7 +48,11 @@ chi=2/(phi-2+sqrt(phi^2-4*phi));
 w=chi;              
 wdamp=1;            
 c1=chi*phi1;        
-c2=chi*phi2;
+c2=chi*phi2;        
+alpha=0.1;
+nGrid=30;
+beta=4;
+gamma=2;
 mu=0.1;
 particle=CreateEmptyParticle(numOfSwarm*nPop);
 gbest = CreateEmptyParticle(numOfObj);
@@ -56,8 +60,9 @@ gbest = CreateEmptyParticle(numOfObj);
 particle = initialSwarm(particle,numOfSwarm,2);
 clear i nn ;
 particle=DetermineDomination(particle); 
-rep = nondom_sort(particle);
-for itrCounter=980:MaxIt
+rep=GetNonDominatedParticles(particle); 
+maintainArchiveByAverageDistance(rep,nRep);
+for itrCounter=900:MaxIt
 	for nn = 1:numOfSwarm
 	    for i=(nn-1)*nPop+1:nn*nPop
 	        rep_h=SelectLeader(rep,nn,numOfObj);
@@ -101,10 +106,13 @@ for itrCounter=980:MaxIt
 	        end
 	    end
     end
+    particle=DetermineDomination(particle);
+    nd_particle=GetNonDominatedParticles(particle);
     rep=[rep
-         particle];
-    rep = nondom_sort(rep);
-    rep = maintainArchiveByDensityDistance(rep,nRep);
+         nd_particle];
+    rep=DetermineDomination(rep);
+    rep=GetNonDominatedParticles(rep);
+    maintainArchiveByAverageDistance(rep,nRep);
     disp(['Iteration ' num2str(itrCounter) ': Number of Repository Particles = ' num2str(numel(rep))]);
     w=w*wdamp;
     swarm2pic(rep);
