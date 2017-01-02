@@ -12,19 +12,12 @@ function newRep = maintainArchiveByDensityDistance(rep,nRep)
         breakLine = breakLine + 1;
         tempNumber = tempNumber + numel(rep([rep.numlies]==breakLine));
         removeNumber = tempNumber - nRep;
-    end 
-    for tempNumber = 1:breakLine - 1
         newRep = [newRep
-                  rep([rep.numlies]==tempNumber)];
+                  rep([rep.numlies]==breakLine)];
     end
-    if numel(newRep) == 0
-        newRep = rep([rep.numlies]==tempNumber);
-    end
-    
-    if numel(newRep) > nRep
-        newRep = [newRep
+    newRep([newRep.numlies]==breakLine) = [];
+    newRep = [newRep
             removeFromLine(rep,breakLine,removeNumber)];
-    end
 end
 
 function repAtBreakLine = removeFromLine(rep,atLine,removeNumber)
@@ -43,8 +36,8 @@ function distance = computeDensityDistance(repAtBreakLine)
     repNumberAtBreakLine = numel(repAtBreakLine);
     distance = zeros(1,repNumberAtBreakLine);
     objValueInDim = reshape([repAtBreakLine.Cost],[numOfObj,repNumberAtBreakLine]);
-    maxValueInDim = repmat(max(objValueInDim,2),[1,repNumberAtBreakLine]);
-    minValueInDim = repmat(min(objValueInDim,2),[1,repNumberAtBreakLine]);
+    maxValueInDim = repmat(max(objValueInDim,[],2),[1,repNumberAtBreakLine]);
+    minValueInDim = repmat(min(objValueInDim,[],2),[1,repNumberAtBreakLine]);
     normalizedObjValueInDim = (objValueInDim - minValueInDim)./(maxValueInDim-minValueInDim);
     distanceVlaueInDim = zeros(size(objValueInDim));
     [~,objValueIndexInDim] = sort(objValueInDim,2,'ascend');
@@ -53,8 +46,8 @@ function distance = computeDensityDistance(repAtBreakLine)
             distanceVlaueInDim(i,objValueIndexInDim(i,j)) = ...
                 abs(normalizedObjValueInDim(i,objValueIndexInDim(i,j+1)) - normalizedObjValueInDim(i,objValueIndexInDim(i,j-1)));
         end
-        distanceVlaueInDim(find(objValueIndexInDim(i,:),1)) = Inf;
-        distanceVlaueInDim(find(objValueIndexInDim(i,:),repNumberAtBreakLine)) = Inf;
+        distanceVlaueInDim(objValueIndexInDim(i,1)) = Inf;
+        distanceVlaueInDim(objValueIndexInDim(i,repNumberAtBreakLine)) = Inf;
         distance = distance + distanceVlaueInDim(i,:);
     end
 end

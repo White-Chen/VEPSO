@@ -38,7 +38,7 @@ itrCounter = 0;
 VarSize=[1 nVar]; 
 VelMax=(VarMax-VarMin); 
 nPop=20;
-numOfSwarm = 6;
+numOfSwarm = 4;
 nRep=100;  
 MaxIt=10000; 
 phi1=2.05; 
@@ -49,23 +49,28 @@ w=chi;
 wdamp=1;            
 c1=chi*phi1;        
 c2=chi*phi2;        
-alpha=0.1;
-nGrid=30;
-beta=4;
-gamma=2;
 mu=0.1;
 particle=CreateEmptyParticle(numOfSwarm*nPop);
-gbest = CreateEmptyParticle(numOfObj);
+gbest = CreateEmptyParticle(numOfSwarm);
 [gbest.Cost] = deal(Inf*ones(1,numOfObj));
 particle = initialSwarm(particle,numOfSwarm,2);
+for nn = 1:numOfSwarm
+    for i = 1:(nn-1)*nPop+1:nn*nPop
+        if Dominates(particle(i),gbest(nn))    
+            gbest(nn)=particle(i);
+        elseif rand<0.5
+            gbest(nn)=particle(i);
+        end
+    end
+end
 clear i nn ;
 particle=DetermineDomination(particle); 
-rep=GetNonDominatedParticles(particle); 
-maintainArchiveByAverageDistance(rep,nRep);
-for itrCounter=900:MaxIt
+rep=GetNonDominatedParticles(particle);
+rep=maintainArchiveByAverageDistance(rep,nRep);
+for itrCounter=1:MaxIt
 	for nn = 1:numOfSwarm
 	    for i=(nn-1)*nPop+1:nn*nPop
-	        rep_h=SelectLeader(rep,nn,numOfObj);
+	        [rep_h,rep_h_index]=SelectLeader2(rep,nn,numOfObj);
 	        particle(i).Velocity=w*particle(i).Velocity ...
 	                             +c1*rand*(particle(i).Best.Position - particle(i).Position) ...
 	                             +c2*rand*(rep_h.Position -  particle(i).Position);
@@ -103,7 +108,12 @@ for itrCounter=900:MaxIt
 	                particle(i).Best.Position=particle(i).Position;
 	                particle(i).Best.Cost=particle(i).Cost;
 	            end
-	        end
+            end
+         %    if Dominates(particle(i),gbest(nn))    
+	        %     gbest(nn)=particle(i);
+         %    elseif rand<0.5
+	        %     gbest(nn)=particle(i);
+	        % end
 	    end
     end
     particle=DetermineDomination(particle);
@@ -112,7 +122,7 @@ for itrCounter=900:MaxIt
          nd_particle];
     rep=DetermineDomination(rep);
     rep=GetNonDominatedParticles(rep);
-    maintainArchiveByAverageDistance(rep,nRep);
+    rep=maintainArchiveByAverageDistance(rep,nRep);
     disp(['Iteration ' num2str(itrCounter) ': Number of Repository Particles = ' num2str(numel(rep))]);
     w=w*wdamp;
     swarm2pic(rep);

@@ -21,12 +21,12 @@
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function i=RouletteWheelSelection(p)
-    r=rand;
-    c=cumsum(p);
-    c=c/sum(p);
-    i=find(r<=c,1,'first');
-    if size(i) == [1,0]
-    	i = 0;
+function [rep_h,selectindex]=SelectLeader2(pops,nn,numOfObj)
+    selectindex = RouletteWheelSelection(rand(size(pops)));
+    if selectindex ~= 0
+    	rep_h = pops(selectindex);
+	else
+		rep_h = pops(ceil(rand*numel(pops)));
 	end
+    clear pops index tempIndex; 
 end
