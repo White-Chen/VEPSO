@@ -46,8 +46,8 @@ function distance = computeDensityDistance(repAtBreakLine)
             distanceVlaueInDim(i,objValueIndexInDim(i,j)) = ...
                 abs(normalizedObjValueInDim(i,objValueIndexInDim(i,j+1)) - normalizedObjValueInDim(i,objValueIndexInDim(i,j-1)));
         end
-        distanceVlaueInDim(objValueIndexInDim(i,1)) = Inf;
-        distanceVlaueInDim(objValueIndexInDim(i,repNumberAtBreakLine)) = Inf;
+        distanceVlaueInDim(i,objValueIndexInDim(i,1)) = Inf;
+        distanceVlaueInDim(i,objValueIndexInDim(i,repNumberAtBreakLine)) = Inf;
         distance = distance + distanceVlaueInDim(i,:);
     end
 end
