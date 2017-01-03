@@ -1626,7 +1626,7 @@ end
 function p=fda4(p,dim)
 p.name   = 'fda4';
 p.pd     = dim;
-p.od     = 2;
+p.od     = dim-9;
 p.domain = [zeros(dim,1) ones(dim,1)];
 p.func   = @evaluate;
 
@@ -1664,7 +1664,7 @@ end
 function p=fda5(p,dim)
 p.name   = 'fda5';
 p.pd     = dim;
-p.od     = 2;
+p.od     = dim-9;
 p.domain = [zeros(dim,1) ones(dim,1)];
 p.func   = @evaluate;
 
