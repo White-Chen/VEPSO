@@ -1539,7 +1539,7 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
-	x 	     =x';
+        x            =x';
         n            =length(x);
         f1           =x(1);
         t            =(floor(itrCounter/window))/step;
@@ -1588,6 +1588,38 @@ p.func   = @evaluate;
     end
 end 
 
+%% FDA2-nsga2
+% x are columnwise and y are rowwise, the input x must be inside the search space and
+% it could be a matrxix 
+% time window for which the process remains constant
+% step controls the distance between 2 paretos nT
+function p=fda2_nsga2(p,dim)
+p.name   = 'fda2_nsga2';
+p.pd     = dim;
+p.od     = 2;
+p.domain = [-1*ones(dim,1) ones(dim,1)];
+p.domain(1,1) = 0;
+p.func   = @evaluate;
+
+    function y=evaluate(x)
+    	global itrCounter params step window;
+        x            =x';
+        n            =length(x);
+        f1           =x(1);
+        t            =2*floor(itrCounter/window)*(window/(step*window-window));
+%         t            =(floor(itrCounter/window))/step;
+        H            =2*sin(0.5*pi*(t-1));
+        temp         =x(2:6);
+        temp2        =x(7:13);
+        g            =1+sum(temp.^2);   
+        Htemp        =sum((temp2-H/4).^2);
+        h            =1-(f1/g)^(2^(H+Htemp));
+        f2           =g*h;
+        y            =[f1,f2];
+        clear temp temp2 Htemp k h;
+    end
+end 
+
 %% FDA3
 % x are columnwise and y are rowwise, the input x must be inside the search space and
 % it could be a matrxix 
@@ -1603,8 +1635,8 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
-        x	     =x';
-	n            =length(x);
+        x            =x';
+        n            =length(x);
         t            =(floor(itrCounter/window))/step;
         G            =abs(sin(0.5*3.14*t));
         F            =2*G;  %10^(2*sin(0.5*pi*t))
@@ -1632,7 +1664,7 @@ p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
-	x	     =x';
+        x            =x';
         n            =length(x);
         t            =(floor(itrCounter/window))/step;
         temp         =x(p.od:end);
@@ -1645,7 +1677,7 @@ p.func   = @evaluate;
         for k = 2:p.od-1
             fxtemp      =cos((x(1:p.od-k)*pi)/2);
             fx          =(1+g)*prod(fxtemp)*sin((x(p.od-k+1)*pi)/2);
-            f           =[f,fx]
+            f           =[f,fx];
             clear fxtemp fx;
         end
         fxtemp       =sin((x(1)*pi)/2);
@@ -1664,13 +1696,12 @@ end
 function p=fda5(p,dim)
 p.name   = 'fda5';
 p.pd     = dim;
-p.od     = dim-9;
+p.od     = 2;
 p.domain = [zeros(dim,1) ones(dim,1)];
 p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
-	x	     =x';
         n            =length(x);
         t            =(floor(itrCounter/window))/step;
         temp         =x(p.od:end);
@@ -1685,12 +1716,12 @@ p.func   = @evaluate;
         for k = 2:p.od-1
           fxtemp      =cos((y(1:p.od-k)*pi)/2);
           fx          =(1+g)*prod(fxtemp)*sin((y(p.od-k+1)*pi)/2);
-          f           =[f,fx]
+          f           =[f;fx]
           clear fxtemp fx;
         end
         fxtemp       =sin((y(1)*pi)/2);
         fx           =(1+g)*fxtemp;
-        f            =[f,fx];
+        f            =[f;fx];
         y            =f;
         clear temp gtemp f1temp fxtemp fx f;
     end

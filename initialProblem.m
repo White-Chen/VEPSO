@@ -212,12 +212,12 @@ function initialProblem()
             clear i;
         case 31
             mop = testmop('fda1',20);
-	    CostFunction=@(x) mop.func(x);
-	    nVar = 20;
-	    VarMin = mop.domain(:,1)';
-	    VarMax = mop.domain(:,2)';
-	    numOfObj = 2;
-	    dynamic = 1;
+            CostFunction=@(x) mop.func(x);
+            nVar = 20;
+            VarMin = mop.domain(:,1)';
+            VarMax = mop.domain(:,2)';
+            numOfObj = 2;
+            dynamic = 1;
         case 32
             mop = testmop('fda2',31);
             CostFunction=@(x) mop.func(x);
@@ -264,5 +264,13 @@ function initialProblem()
             VarMax = mop.domain(:,2)';
             numOfObj = 3;
             dynamic = 0;
+        case 37
+            mop = testmop('fda2_nsga2',13);
+            CostFunction=@(x) mop.func(x);
+            nVar = 13;
+            VarMin = mop.domain(:,1)';
+            VarMax = mop.domain(:,2)';
+            numOfObj = 2;
+            dynamic = 1;
     end
 end
