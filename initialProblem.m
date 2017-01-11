@@ -272,5 +272,13 @@ function initialProblem()
             VarMax = mop.domain(:,2)';
             numOfObj = 2;
             dynamic = 1;
+        case 38
+            mop = testmop('dMOP3',10);
+            CostFunction=@(x) mop.func(x);
+            nVar = 10;
+            VarMin = mop.domain(:,1)';
+            VarMax = mop.domain(:,2)';
+            numOfObj = 2;
+            dynamic = 1;
     end
 end

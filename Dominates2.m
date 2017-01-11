@@ -8,5 +8,5 @@ function dom=Dominates2(x,y,numOfObj)
         y=y.Cost(numOfObj);
     end
 
-    dom=x<y;
+    dom=x<=y;
 end

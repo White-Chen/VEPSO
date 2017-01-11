@@ -28,19 +28,19 @@ close all;
 %% Problem Definition
 global dmethod itrCounter step window CostFunction nVar nPop VarMin VarMax numOfObj VarSize VelMax TestProblem dynamic MaxIt colors;
 colors = {'bo','go','ro','co','mo','ko','bv','gv','rv','cv','mv','kv','bs','gs','rs','cs','ms','ks'};
-TestProblem=33; 
+TestProblem=31; 
 dynamic = 1;
 initialProblem();
 dmethod = 'te';
-step = 10;
-window = 1000;
+step = 200;
+window = 5;
 itrCounter = 0;
 VarSize=[1 nVar]; 
 VelMax=(VarMax-VarMin); 
 nPop=20;
-numOfSwarm = 4;
+numOfSwarm = 8;
 nRep=100;  
-MaxIt=10000; 
+MaxIt=step*window; 
 phi1=2.05; 
 phi2=2.05;
 phi=phi1+phi2;  
@@ -70,7 +70,7 @@ rep = maintainArchiveByDensityDistance(rep,nRep);
 for itrCounter=1:MaxIt
 	for nn = 1:numOfSwarm
 	    for i=(nn-1)*nPop+1:nn*nPop
-	        [rep_h,rep_h_index]=SelectLeader2(rep,nn,numOfObj);
+	        [rep_h,rep_h_index]=SelectLeader(rep,nn,numOfSwarm);
 	        particle(i).Velocity=w*particle(i).Velocity ...
 	                             +c1*rand*(particle(i).Best.Position - particle(i).Position) ...
 	                             +c2*rand*(rep_h.Position -  particle(i).Position);
@@ -90,30 +90,24 @@ for itrCounter=1:MaxIt
 	            if Dominates2(NewSol,particle(i),particle(i).numOfObj)
 	                particle(i).Position=NewSol.Position;
 	                particle(i).Cost=NewSol.Cost;
-
-	            elseif Dominates2(particle(i),NewSol,particle(i).numOfObj)
-
-	            else
-	                if rand<0.5
+                elseif rand<0.5
 	                    particle(i).Position=NewSol.Position;
 	                    particle(i).Cost=NewSol.Cost;
-	                end
 	            end
 	        end
 	        if Dominates2(particle(i),particle(i).Best,particle(i).numOfObj)    
 	            particle(i).Best.Position=particle(i).Position;
 	            particle(i).Best.Cost=particle(i).Cost;
-	        elseif ~Dominates2(particle(i).Best,particle(i),particle(i).numOfObj)
-	            if rand<0.5
+            elseif rand<0.5
 	                particle(i).Best.Position=particle(i).Position;
 	                particle(i).Best.Cost=particle(i).Cost;
-	            end
 	        end
-	        % if Dominates(particle(i),gbest(nn))    
-	        %     gbest(nn)=particle(i);
-         %    elseif rand<0.5
-	        %     gbest(nn)=particle(i);
-	        % end
+% 	        if Dominates(particle(i),gbest(nn))    
+% 	            gbest(nn)=particle(i);
+%           elseif Dominates(gbest(nn),particle(i))
+%             elseif rand<0.5
+% 	            gbest(nn)=particle(i);
+% 	        end
 	    end
     end
     rep=[rep

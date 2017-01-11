@@ -36,5 +36,7 @@ function particle=CreateEmptyParticle(n)
     empty_particle.numOfObj = 0;
     empty_particle.subSwarmIndex = 0;
     empty_particle.numlies = 0;
+    empty_particle.particleIndex = 1;
+    empty_particle.isGbest=boolean(0);
     particle=repmat(empty_particle,n,1); 
 end

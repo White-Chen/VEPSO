@@ -1726,6 +1726,33 @@ p.func   = @evaluate;
         clear temp gtemp f1temp fxtemp fx f;
     end
 end 
+%% ---------dMOP Benchmark without constraintrs. Ref.[X]----------
+%% dMOP3
+function p=dMOP3(p,dim)
+p.name   = 'dMOP3';
+p.pd     = dim;
+p.od     = 2;
+p.domain = [zeros(dim,1) ones(dim,1)];
+p.domain(1,1) = 0;
+p.func   = @evaluate;
+
+    function y=evaluate(x)
+    	global itrCounter params step window;
+        x            =x';
+        n            =length(x);
+%         r            =;
+        f1           =x(1);
+        t            =(floor(itrCounter/window))/step;
+        H            =1.25+0.75*sin(0.5*pi*t);
+        G            =sin(0.5*pi*t);
+        g            =1+sum((x(2:n)-G).^2);
+        h            =1-(f1/g)^H;
+        f2           =g*h;
+        y            =[f1,f2];
+        clear temp G g h;
+    end
+end 
+
 
 %% ---------CEC2014 Benchmark without constraintrs. Ref.[6]----------
 %% ud1
