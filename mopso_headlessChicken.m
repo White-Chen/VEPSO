@@ -28,17 +28,17 @@ close all;
 %% Problem Definition
 global dmethod itrCounter step window CostFunction nVar nPop VarMin VarMax numOfObj VarSize VelMax TestProblem dynamic MaxIt colors;
 colors = {'bo','go','ro','co','mo','ko','bv','gv','rv','cv','mv','kv','bs','gs','rs','cs','ms','ks'};
-TestProblem=33; 
+TestProblem=31; 
 dynamic = 1;
 initialProblem();
 dmethod = 'te';
-step = 10;
-window = 1000;
+step = 200;
+window = 5;
 itrCounter = 0;
 VarSize=[1 nVar]; 
 VelMax=(VarMax-VarMin); 
 nPop=20;
-numOfSwarm = 4;
+numOfSwarm = 8;
 nRep=100;  
 MaxIt=step*window; 
 phi1=2.05; 
@@ -50,7 +50,7 @@ wdamp=1;
 c1=chi*phi1;        
 c2=chi*phi2;        
 mu=0.1;
-headlessChicken_w = 0.5;
+headlessChicken_w = 0.1;
 particle=CreateEmptyParticle(numOfSwarm*nPop);
 gbest = CreateEmptyParticle(numOfSwarm);
 [gbest.Cost] = deal(Inf*ones(1,numOfObj));
@@ -68,11 +68,13 @@ clear i nn ;
 particle=DetermineDomination(particle); 
 rep=GetNonDominatedParticles(particle);
 rep=maintainArchiveByAverageDistance(rep,nRep);
-for itrCounter=950:MaxIt
+% rep = nondom_sort(particle);
+% rep=maintainArchiveByDensityDistance(rep,nRep);
+for itrCounter=0:MaxIt
 	for nn = 1:numOfSwarm
 	    for i=(nn-1)*nPop+1:nn*nPop
-	        [rep_h,rep_h_index]=SelectLeader(gbest,nn,numOfSwarm);
-	        local_guide = parentCentricCrossover(particle,i,headlessChicken_w);
+	        [rep_h,rep_h_index]=SelectLeader2(gbest,nn,numOfSwarm);
+	        local_guide = parentCentricCrossover(particle,i,gbest(nn),headlessChicken_w);
 	        particle(i).Velocity=w*particle(i).Velocity ...
 	                             +c1*rand*(local_guide.Position - particle(i).Position) ...
 	                             +c2*rand*(rep_h.Position -  particle(i).Position);
@@ -118,6 +120,10 @@ for itrCounter=950:MaxIt
     rep=DetermineDomination(rep);
     rep=GetNonDominatedParticles(rep);
     rep=maintainArchiveByAverageDistance(rep,nRep);
+%     rep=[rep
+%             particle];
+%     rep = nondom_sort(rep);
+%     rep=maintainArchiveByDensityDistance(rep,nRep);
     disp(['Iteration ' num2str(itrCounter) ': Number of Repository Particles = ' num2str(numel(rep))]);
     w=w*wdamp;
     swarm2pic(rep);
