@@ -1693,15 +1693,16 @@ end
 % it could be a matrxix 
 % time window for which the process remains constant
 % step controls the distance between 2 paretos nT
-function p=fda5(p,dim)
-p.name   = 'fda5';
+function p=fda5_dec(p,dim)
+p.name   = 'fda5_dec';
 p.pd     = dim;
-p.od     = 2;
+p.od     = dim-9;
 p.domain = [zeros(dim,1) ones(dim,1)];
 p.func   = @evaluate;
 
     function y=evaluate(x)
         global itrCounter step window;
+        x            =x';
         n            =length(x);
         t            =(floor(itrCounter/window))/step;
         temp         =x(p.od:end);
@@ -1716,12 +1717,12 @@ p.func   = @evaluate;
         for k = 2:p.od-1
           fxtemp      =cos((y(1:p.od-k)*pi)/2);
           fx          =(1+g)*prod(fxtemp)*sin((y(p.od-k+1)*pi)/2);
-          f           =[f;fx]
+          f           =[f,fx];
           clear fxtemp fx;
         end
         fxtemp       =sin((y(1)*pi)/2);
         fx           =(1+g)*fxtemp;
-        f            =[f;fx];
+        f            =[f,fx];
         y            =f;
         clear temp gtemp f1temp fxtemp fx f;
     end
