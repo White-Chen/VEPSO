@@ -22,14 +22,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function dom=Dominates(x,y,varargin)
-
+    global epsilon;
     if nargin < 3
 	    if isstruct(x)
 	        x=x.Cost;
+            x=x*(1+epsilon);
 	    end
 
 	    if isstruct(y)
 	        y=y.Cost;
+            y=y*(1+epsilon);
 	    end
 	    
 		dom=all(x<=y) && any(x<y);
